@@ -1,0 +1,204 @@
+---
+title: "CI/CD Pipeline Best Practices for 2025"
+date: "2025-01-05"
+description: "Modern CI/CD patterns and practices for faster, more reliable deployments."
+coverImage: "/blog/cicd-best-practices/cover.png"
+tags: ["CI/CD", "DevOps", "Automation"]
+---
+
+## Why CI/CD Matters
+
+Continuous Integration and Continuous Deployment are the backbone of modern software delivery. A well-designed pipeline can reduce deployment time from days to minutes.
+
+![CI/CD Pipeline Architecture](/blog/cicd-best-practices/pipeline.png)
+
+## 1. Pipeline as Code
+
+Never configure pipelines through UI. Use declarative configuration:
+
+### GitHub Actions Example:
+
+```yaml
+name: Deploy Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: |
+          docker build -t myapp:${{ github.sha }} .
+          docker push myapp:${{ github.sha }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/myapp \
+            myapp=myapp:${{ github.sha }}
+```
+
+## 2. Fast Feedback Loops
+
+Optimize for speed. Every minute counts:
+
+- **Parallelize tests**: Run unit, integration, and e2e tests concurrently
+- **Cache dependencies**: Don't download node_modules every time
+- **Use incremental builds**: Only rebuild what changed
+- **Fail fast**: Run quick checks first (linting, type checking)
+
+```yaml
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run lint
+  
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run typecheck
+  
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run test:unit
+  
+  integration-tests:
+    needs: [lint, typecheck, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run test:integration
+```
+
+## 3. Environment Parity
+
+Dev, staging, and production should be identical:
+
+```yaml
+# docker-compose.yml for local development
+services:
+  app:
+    build: .
+    environment:
+      - DATABASE_URL=postgres://localhost:5432/app
+      - REDIS_URL=redis://localhost:6379
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:15-alpine
+    
+  redis:
+    image: redis:7-alpine
+```
+
+## 4. Blue-Green Deployments
+
+Zero-downtime deployments with instant rollback:
+
+```bash
+#!/bin/bash
+# Blue-green deployment script
+
+NEW_VERSION=$1
+CURRENT=$(kubectl get svc myapp -o jsonpath='{.spec.selector.version}')
+
+if [ "$CURRENT" == "blue" ]; then
+  NEW="green"
+else
+  NEW="blue"
+fi
+
+# Deploy to inactive environment
+kubectl apply -f deployment-$NEW.yaml
+kubectl set image deployment/myapp-$NEW myapp=myapp:$NEW_VERSION
+
+# Wait for rollout
+kubectl rollout status deployment/myapp-$NEW
+
+# Switch traffic
+kubectl patch svc myapp -p '{"spec":{"selector":{"version":"'$NEW'"}}}'
+
+echo "Switched from $CURRENT to $NEW"
+```
+
+## 5. Security in the Pipeline
+
+Shift security left – catch issues before production:
+
+```yaml
+security-scan:
+  runs-on: ubuntu-latest
+  steps:
+    - name: SAST - Semgrep
+      uses: returntocorp/semgrep-action@v1
+      
+    - name: Dependency Scan
+      run: npm audit --audit-level=high
+      
+    - name: Container Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'myapp:${{ github.sha }}'
+        severity: 'CRITICAL,HIGH'
+```
+
+## 6. Observability
+
+Instrument your pipelines:
+
+- Track deployment frequency
+- Measure lead time for changes
+- Monitor mean time to recovery (MTTR)
+- Calculate change failure rate
+
+```yaml
+- name: Record deployment metrics
+  run: |
+    curl -X POST $DATADOG_API \
+      -d '{
+        "metric": "deployment.count",
+        "points": [["'$(date +%s)'", 1]],
+        "tags": ["env:production", "app:myapp"]
+      }'
+```
+
+## Checklist
+
+- [ ] Pipeline defined as code
+- [ ] Tests run in parallel
+- [ ] Caching enabled
+- [ ] Security scans integrated
+- [ ] Blue-green or canary deployments
+- [ ] Rollback procedure documented
+- [ ] Metrics and alerts configured
+
+## Conclusion
+
+Great CI/CD is about fast, reliable, and secure delivery. Start simple, measure everything, and iterate continuously.
+
+---
+
+*What's your favorite CI/CD tool? Let me know on [Twitter](#)!*

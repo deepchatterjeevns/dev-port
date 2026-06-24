@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Suppress hydration errors */
+[data-hydration-error] {
+  display: none !important;
+}
+
+/* Dark theme (default) */
+:root {
+  --background: 10 10 10;
+  --foreground: 229 229 229;
+  --card: 23 23 23;
+  --card-foreground: 250 250 250;
+  --primary: 16 185 129;
+  --primary-foreground: 255 255 255;
+  --muted: 38 38 38;
+  --muted-foreground: 163 163 163;
+  --border: 38 38 38;
+  --accent: 16 185 129;
+}
+
+/* Light theme */
+.light {
+  --background: 255 255 255;
+  --foreground: 23 23 23;
+  --card: 250 250 250;
+  --card-foreground: 23 23 23;
+  --primary: 16 185 129;
+  --primary-foreground: 255 255 255;
+  --muted: 245 245 245;
+  --muted-foreground: 115 115 115;
+  --border: 229 229 229;
+  --accent: 16 185 129;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dark mode styles */
+.dark body {
+  background-color: rgb(10 10 10);
+  color: rgb(229 229 229);
+}
+
+/* Light mode styles */
+.light body {
+  background-color: rgb(255 255 255);
+  color: rgb(23 23 23);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Terminal cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s infinite;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card hover glow */
+.card-glow {
+  transition: all 0.3s ease;
+}
+
+.dark .card-glow:hover {
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+.light .card-glow:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: rgb(23 23 23);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgb(64 64 64);
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: rgb(245 245 245);
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: rgb(200 200 200);
+  border-radius: 4px;
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Syntax Highlighting (highlight.js - GitHub Dark theme) */
+.hljs {
+  color: #c9d1d9;
+  background: transparent;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: #ff7b72;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: #d2a8ff;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  color: #79c0ff;
+}
+
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  color: #a5d6ff;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: #ffa657;
+}
+
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  color: #8b949e;
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  color: #7ee787;
+}
+
+.hljs-subst {
+  color: #c9d1d9;
+}
+
+.hljs-section {
+  color: #1f6feb;
+  font-weight: bold;
+}
+
+.hljs-bullet {
+  color: #f2cc60;
+}
+
+.hljs-emphasis {
+  color: #c9d1d9;
+  font-style: italic;
+}
+
+.hljs-strong {
+  color: #c9d1d9;
+  font-weight: bold;
+}
+
+.hljs-addition {
+  color: #aff5b4;
+  background-color: #033a16;
+}
+
+.hljs-deletion {
+  color: #ffdcd7;
+  background-color: #67060c;
+}
+
+/* Prose custom styling for MDX content */
+.prose-custom {
+  @apply leading-relaxed;
+}
+
+.prose-custom h1,
+.prose-custom h2,
+.prose-custom h3,
+.prose-custom h4,
+.prose-custom h5,
+.prose-custom h6 {
+  @apply font-bold;
+}
+
+/* Light mode syntax highlighting adjustments */
+.light .hljs {
+  color: #24292f;
+}
+
+.light .hljs-doctag,
+.light .hljs-keyword,
+.light .hljs-meta .hljs-keyword,
+.light .hljs-template-tag,
+.light .hljs-template-variable,
+.light .hljs-type,
+.light .hljs-variable.language_ {
+  color: #cf222e;
+}
+
+.light .hljs-title,
+.light .hljs-title.class_,
+.light .hljs-title.class_.inherited__,
+.light .hljs-title.function_ {
+  color: #8250df;
+}
+
+.light .hljs-attr,
+.light .hljs-attribute,
+.light .hljs-literal,
+.light .hljs-meta,
+.light .hljs-number,
+.light .hljs-operator,
+.light .hljs-variable,
+.light .hljs-selector-attr,
+.light .hljs-selector-class,
+.light .hljs-selector-id {
+  color: #0550ae;
+}
+
+.light .hljs-regexp,
+.light .hljs-string,
+.light .hljs-meta .hljs-string {
+  color: #0a3069;
+}
+
+.light .hljs-built_in,
+.light .hljs-symbol {
+  color: #953800;
+}
+
+.light .hljs-comment,
+.light .hljs-code,
+.light .hljs-formula {
+  color: #6e7781;
+}
+
+.light .hljs-name,
+.light .hljs-quote,
+.light .hljs-selector-tag,
+.light .hljs-selector-pseudo {
+  color: #116329;
+}

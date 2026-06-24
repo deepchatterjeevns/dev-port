@@ -1,0 +1,123 @@
+---
+title: "Hardening Kubernetes Clusters for Production"
+date: "2025-01-15"
+description: "A comprehensive guide to securing your Kubernetes clusters with network policies, RBAC, and pod security standards."
+coverImage: "/blog/hardening-kubernetes-clusters/cover.png"
+tags: ["Kubernetes", "Security", "DevOps"]
+---
+
+## Introduction
+
+Securing Kubernetes clusters is essential for any production workload. In this post, I'll walk through the key security measures I implement for every cluster I manage.
+
+![Kubernetes Security Architecture](/blog/hardening-kubernetes-clusters/architecture.png)
+
+## 1. Network Policies
+
+By default, Kubernetes allows all pods to communicate with each other. This is a significant security risk. Network policies help you control traffic flow.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: production
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+```
+
+This policy denies all incoming traffic to pods in the `production` namespace. You can then selectively allow traffic.
+
+## 2. RBAC Best Practices
+
+Role-Based Access Control is your first line of defense. Follow the principle of least privilege:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+```
+
+### Key RBAC Principles:
+
+- **Avoid cluster-admin**: Only use for initial setup
+- **Namespace isolation**: Create roles per namespace
+- **Service accounts**: Use dedicated SAs for each application
+- **Audit regularly**: Review who has access to what
+
+## 3. Pod Security Standards
+
+Kubernetes 1.25+ uses Pod Security Standards (PSS) instead of the deprecated PodSecurityPolicy.
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secure-namespace
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
+```
+
+## 4. Secrets Management
+
+Never store secrets in plain text. Use external secret managers:
+
+- **HashiCorp Vault** with the CSI driver
+- **AWS Secrets Manager** with External Secrets Operator
+- **Azure Key Vault** with the CSI driver
+
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: app-secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: SecretStore
+  target:
+    name: app-secrets
+  data:
+    - secretKey: database-password
+      remoteRef:
+        key: secret/data/production/database
+        property: password
+```
+
+## 5. Image Security
+
+Only allow trusted container images:
+
+1. **Use private registries** with authentication
+2. **Scan images** with Trivy or Snyk
+3. **Sign images** with Sigstore/Cosign
+4. **Use admission controllers** to enforce policies
+
+```bash
+# Scan an image with Trivy
+trivy image myregistry/myapp:latest
+```
+
+## Conclusion
+
+Security is not a one-time task but an ongoing process. Implement these measures incrementally and continuously audit your clusters.
+
+**Next steps:**
+- Set up automated security scanning in CI/CD
+- Implement runtime security with Falco
+- Enable audit logging for compliance
+
+---
+
+*Have questions about Kubernetes security? Reach out on [LinkedIn](#) or [Twitter](#).*

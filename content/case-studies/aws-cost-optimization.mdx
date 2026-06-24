@@ -1,0 +1,151 @@
+---
+title: "AWS Cost Optimization: Saving 40% on Cloud Spend"
+date: "2025-01-10"
+description: "Practical strategies I used to reduce AWS costs by 40% without sacrificing performance."
+coverImage: "/blog/aws-cost-optimization/cover.png"
+tags: ["AWS", "Cloud", "FinOps"]
+---
+
+## The Problem
+
+Cloud costs can spiral out of control quickly. In a recent project, I helped a client reduce their monthly AWS bill from $45,000 to $27,000 – a 40% reduction.
+
+![AWS Cost Dashboard](/blog/aws-cost-optimization/dashboard.png)
+
+## 1. Right-Sizing EC2 Instances
+
+Most organizations over-provision their instances. Use CloudWatch metrics to identify underutilized resources.
+
+```bash
+# Check CPU utilization over 7 days
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/EC2 \
+  --metric-name CPUUtilization \
+  --dimensions Name=InstanceId,Value=i-1234567890abcdef0 \
+  --start-time $(date -d '7 days ago' --utc +%Y-%m-%dT%H:%M:%SZ) \
+  --end-time $(date --utc +%Y-%m-%dT%H:%M:%SZ) \
+  --period 3600 \
+  --statistics Average
+```
+
+### Savings Breakdown:
+
+| Instance Type | Old | New | Monthly Savings |
+|--------------|-----|-----|----------------|
+| Web Servers | m5.xlarge | m5.large | $2,400 |
+| API Servers | c5.2xlarge | c5.xlarge | $3,200 |
+| Databases | r5.4xlarge | r5.2xlarge | $4,800 |
+
+## 2. Reserved Instances & Savings Plans
+
+For predictable workloads, commit to 1-year or 3-year terms:
+
+- **1-year no upfront**: 30-40% savings
+- **3-year all upfront**: Up to 72% savings
+
+```python
+# Calculate RI coverage
+import boto3
+
+ce = boto3.client('ce')
+
+response = ce.get_reservation_coverage(
+    TimePeriod={
+        'Start': '2025-01-01',
+        'End': '2025-01-31'
+    },
+    Granularity='MONTHLY'
+)
+
+print(f"RI Coverage: {response['Total']['CoverageHours']['CoverageHoursPercentage']}%")
+```
+
+## 3. Spot Instances for Non-Critical Workloads
+
+Spot instances offer up to 90% discount. Use them for:
+
+- CI/CD runners
+- Batch processing
+- Development environments
+- Auto-scaling groups with mixed instances
+
+```yaml
+# Terraform spot instance configuration
+resource "aws_launch_template" "spot" {
+  name_prefix   = "spot-"
+  instance_type = "m5.large"
+
+  instance_market_options {
+    market_type = "spot"
+    spot_options {
+      max_price = "0.05"
+    }
+  }
+}
+```
+
+## 4. S3 Lifecycle Policies
+
+Automate data tiering to reduce storage costs:
+
+```json
+{
+  "Rules": [
+    {
+      "ID": "Archive old data",
+      "Status": "Enabled",
+      "Transitions": [
+        {
+          "Days": 30,
+          "StorageClass": "STANDARD_IA"
+        },
+        {
+          "Days": 90,
+          "StorageClass": "GLACIER"
+        }
+      ],
+      "Expiration": {
+        "Days": 365
+      }
+    }
+  ]
+}
+```
+
+## 5. Delete Unused Resources
+
+Orphan resources are silent cost killers:
+
+- Unattached EBS volumes
+- Unused Elastic IPs
+- Old snapshots
+- Idle load balancers
+
+```bash
+# Find unattached EBS volumes
+aws ec2 describe-volumes \
+  --filters Name=status,Values=available \
+  --query 'Volumes[*].[VolumeId,Size,CreateTime]' \
+  --output table
+```
+
+## Results
+
+After implementing these strategies:
+
+- **40% cost reduction** ($18,000/month saved)
+- **No performance degradation**
+- **Better resource visibility**
+- **Automated governance**
+
+## Key Takeaways
+
+1. Monitor before optimizing – you need data
+2. Start with quick wins (unused resources)
+3. Commit to RIs for predictable workloads
+4. Use Spot for fault-tolerant applications
+5. Automate with lifecycle policies
+
+---
+
+*Need help with your AWS costs? Let's connect!*
