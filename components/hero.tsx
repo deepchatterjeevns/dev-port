@@ -7,35 +7,41 @@ export function Hero() {
   const { theme } = useTheme();
 
   return (
-    <section className={`min-h-screen flex flex-col items-center justify-center px-4 pt-16 ${theme === "dark" ? "bg-neutral-950" : "bg-gradient-to-b from-neutral-50 to-white"
-      }`}>
+    <section className={`min-h-screen flex flex-col items-center justify-center px-4 pt-16 ${
+      theme === "dark" ? "bg-neutral-950" : "bg-gradient-to-b from-neutral-50 to-white"
+    }`}>
       {/* Terminal Command */}
-      <div className={`mb-6 px-4 py-2 rounded-lg text-sm font-mono ${theme === "dark"
-        ? "bg-neutral-900 text-emerald-400 border border-neutral-800"
-        : "bg-emerald-50 text-emerald-600 border border-emerald-200"
-        }`}>
+      <div className={`mb-6 px-4 py-2 rounded-lg text-sm font-mono ${
+        theme === "dark" 
+          ? "bg-neutral-900 text-emerald-400 border border-neutral-800" 
+          : "bg-emerald-50 text-emerald-600 border border-emerald-200"
+      }`}>
         <span className="opacity-70">$</span> DEPLOY-INFRASTRUCTURE --optimize=true --scale=auto
       </div>
 
       {/* Terminal Prompt */}
       <div className="text-center mb-8">
-        <h1 className={`text-3xl sm:text-4xl md:text-5xl font-mono font-bold mb-4 ${theme === "dark" ? "text-white" : "text-neutral-900"
-          }`}>
+        <h1 className={`text-3xl sm:text-4xl md:text-5xl font-mono font-bold mb-4 ${
+          theme === "dark" ? "text-white" : "text-neutral-900"
+        }`}>
           deep@devops:~$
           <span className="gradient-text"> whoami</span>
-          <span className={`cursor-blink ml-1 ${theme === "dark" ? "text-emerald-400" : "text-emerald-500"
-            }`}>_</span>
+          <span className={`cursor-blink ml-1 ${
+            theme === "dark" ? "text-emerald-400" : "text-emerald-500"
+          }`}>_</span>
         </h1>
-
-        <p className={`text-xl sm:text-2xl mt-4 ${theme === "dark" ? "text-neutral-300" : "text-neutral-700"
-          }`}>
+        
+        <p className={`text-xl sm:text-2xl mt-4 ${
+          theme === "dark" ? "text-neutral-300" : "text-neutral-700"
+        }`}>
           <span className="opacity-60">&gt;</span> DevOps & Cloud Engineer
         </p>
       </div>
 
       {/* Description */}
-      <p className={`max-w-2xl text-center text-lg mb-8 ${theme === "dark" ? "text-neutral-400" : "text-neutral-600"
-        }`}>
+      <p className={`max-w-2xl text-center text-lg mb-8 ${
+        theme === "dark" ? "text-neutral-400" : "text-neutral-600"
+      }`}>
         Architecting cloud-native infrastructure, automating deployment pipelines,
         and building scalable systems that power modern applications with enterprise reliability.
       </p>
@@ -45,10 +51,11 @@ export function Hero() {
         {["AWS", "GCP", "Azure", "Kubernetes", "Terraform", "CI/CD"].map((tech) => (
           <span
             key={tech}
-            className={`px-4 py-2 rounded-full text-sm font-medium border transition-all hover:scale-105 ${theme === "dark"
-              ? "bg-neutral-900 text-emerald-400 border-emerald-500/30 hover:border-emerald-500/60"
-              : "bg-white text-emerald-600 border-emerald-200 hover:border-emerald-400 shadow-sm"
-              }`}
+            className={`px-4 py-2 rounded-full text-sm font-medium border transition-all hover:scale-105 ${
+              theme === "dark"
+                ? "bg-neutral-900 text-emerald-400 border-emerald-500/30 hover:border-emerald-500/60"
+                : "bg-white text-emerald-600 border-emerald-200 hover:border-emerald-400 shadow-sm"
+            }`}
           >
             {tech}
           </span>
@@ -59,20 +66,22 @@ export function Hero() {
       <div className="flex flex-col sm:flex-row gap-4 mb-12">
         <a
           href="#projects"
-          className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${theme === "dark"
-            ? "bg-emerald-500 text-white hover:bg-emerald-600"
-            : "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/25"
-            }`}
+          className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+            theme === "dark"
+              ? "bg-emerald-500 text-white hover:bg-emerald-600"
+              : "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-500/25"
+          }`}
         >
           Explore My Work
           <ArrowDown size={18} />
         </a>
         <a
           href="/resume"
-          className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium border transition-all ${theme === "dark"
-            ? "border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white"
-            : "border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:border-neutral-400"
-            }`}
+          className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-medium border transition-all ${
+            theme === "dark"
+              ? "border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-white"
+              : "border-neutral-300 text-neutral-700 hover:bg-neutral-100 hover:border-neutral-400"
+          }`}
         >
           View Resume
         </a>
@@ -83,17 +92,18 @@ export function Hero() {
         {[
           { icon: "github", href: "#", label: "GitHub" },
           { icon: "linkedin", href: "#", label: "LinkedIn" },
-          { icon: "mail", href: "mailto:hello@deepchatterjee.com", label: "Email" },
+          { icon: "mail", href: "mailto:deep@devopsbydc.com", label: "Email" },
         ].map((social) => (
           <a
             key={social.icon}
             href={social.href}
             target={social.href !== "#" && !social.href.startsWith("mailto:") ? "_blank" : undefined}
             rel={social.href !== "#" && !social.href.startsWith("mailto:") ? "noopener noreferrer" : undefined}
-            className={`transition-colors ${theme === "dark"
-              ? "text-neutral-500 hover:text-emerald-400"
-              : "text-neutral-400 hover:text-emerald-500"
-              }`}
+            className={`transition-colors ${
+              theme === "dark"
+                ? "text-neutral-500 hover:text-emerald-400"
+                : "text-neutral-400 hover:text-emerald-500"
+            }`}
             aria-label={social.label}
           >
             {social.icon === "github" && (

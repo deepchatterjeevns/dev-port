@@ -1,19 +1,19 @@
 import Link from 'next/link';
 import { getAllPosts } from '@/lib/mdx';
 
-export default function CaseStudiesSection() {
+export default function BlogSection() {
   const posts = getAllPosts().slice(0, 3);
 
   return (
     <section className="py-24 px-6">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold mb-8">Recent Case Studies</h2>
-
+        <h2 className="text-2xl font-bold mb-8">Recent Posts</h2>
+        
         <div className="space-y-4">
           {posts.map((post) => (
             <Link
               key={post.slug}
-              href={`/case-studies/${post.slug}`}
+              href={`/blog/${post.slug}`}
               className="block group py-4 border-b border-border hover:border-emerald-500/50 transition-colors"
             >
               <div className="flex items-center justify-between gap-4">
@@ -25,7 +25,7 @@ export default function CaseStudiesSection() {
                     {post.title}
                   </h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {post.readingTime.text}
+                    {post.readingTime}
                   </p>
                 </div>
                 <svg
@@ -47,10 +47,10 @@ export default function CaseStudiesSection() {
         </div>
 
         <Link
-          href="/case-studies"
+          href="/blog"
           className="inline-flex items-center gap-2 mt-8 text-emerald-500 hover:text-emerald-400 transition-colors"
         >
-          View all case studies
+          View all posts
           <svg
             className="w-4 h-4"
             fill="none"

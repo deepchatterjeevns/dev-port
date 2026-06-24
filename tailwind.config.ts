@@ -13,7 +13,7 @@ const config: Config = {
         foreground: 'rgb(229 229 229)',
       },
       fontFamily: {
-        sans: ['var(--font-inter)', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
       },
       typography: {
         invert: {

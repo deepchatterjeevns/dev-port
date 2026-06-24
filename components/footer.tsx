@@ -11,26 +11,29 @@ export function Footer() {
     { icon: Github, href: "#", label: "GitHub" },
     { icon: Linkedin, href: "#", label: "LinkedIn" },
     { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Mail, href: "mailto:hello@deepchatterjee.com", label: "Email" },
+    { icon: Mail, href: "mailto:deep@devopsbydc.com", label: "Email" },
   ];
 
   return (
     <footer
-      className={`py-12 px-4 border-t ${theme === "dark"
-        ? "bg-neutral-950 border-neutral-800"
-        : "bg-neutral-50 border-neutral-200"
-        }`}
+      className={`py-12 px-4 border-t ${
+        theme === "dark"
+          ? "bg-neutral-950 border-neutral-800"
+          : "bg-neutral-50 border-neutral-200"
+      }`}
     >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand & Copyright */}
           <div className="text-center md:text-left">
-            <div className={`font-semibold mb-1 ${theme === "dark" ? "text-white" : "text-neutral-900"
-              }`}>
+            <div className={`font-semibold mb-1 ${
+              theme === "dark" ? "text-white" : "text-neutral-900"
+            }`}>
               DevOpsbyDC
             </div>
-            <p className={`text-sm ${theme === "dark" ? "text-neutral-500" : "text-neutral-500"
-              }`}>
+            <p className={`text-sm ${
+              theme === "dark" ? "text-neutral-500" : "text-neutral-500"
+            }`}>
               © 2024 Deep Chatterjee. All rights reserved.
             </p>
           </div>
@@ -45,10 +48,11 @@ export function Footer() {
                   href={social.href}
                   target={social.href !== "#" && !social.href.startsWith("mailto:") ? "_blank" : undefined}
                   rel={social.href !== "#" && !social.href.startsWith("mailto:") ? "noopener noreferrer" : undefined}
-                  className={`p-2 rounded-lg transition-colors ${theme === "dark"
-                    ? "text-neutral-500 hover:text-white hover:bg-neutral-800"
-                    : "text-neutral-400 hover:text-neutral-900 hover:bg-neutral-200"
-                    }`}
+                  className={`p-2 rounded-lg transition-colors ${
+                    theme === "dark"
+                      ? "text-neutral-500 hover:text-white hover:bg-neutral-800"
+                      : "text-neutral-400 hover:text-neutral-900 hover:bg-neutral-200"
+                  }`}
                   aria-label={social.label}
                 >
                   <Icon size={20} />

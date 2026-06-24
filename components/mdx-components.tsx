@@ -18,7 +18,6 @@ function MDXImage({ src, alt }: MDXImageProps) {
           fill
           className="object-contain"
           sizes="(max-width: 768px) 100vw, 800px"
-          loading="lazy"
         />
       </span>
       {alt && (

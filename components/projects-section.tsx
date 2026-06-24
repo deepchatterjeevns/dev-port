@@ -1,12 +1,11 @@
 "use client";
 
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { useTheme } from "@/components/theme-provider";
 import { projects, type Project } from "@/lib/data/projects";
-import { ExternalLink, Github, FileText } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, ExternalLink, Github, FileText } from "lucide-react";
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project, featured = false }: { project: Project; featured?: boolean }) {
   const { theme } = useTheme();
 
   return (
@@ -15,12 +14,12 @@ function ProjectCard({ project }: { project: Project }) {
         theme === "dark"
           ? "bg-neutral-900/50 border-neutral-800 hover:border-emerald-500/30"
           : "bg-white border-gray-200 hover:border-emerald-500/50 hover:shadow-lg"
-      }`}
+      } ${featured ? "card-glow" : ""}`}
     >
       <h3
-        className={`text-lg font-semibold ${
-          theme === "dark" ? "text-white" : "text-gray-900"
-        }`}
+        className={`font-semibold ${
+          featured ? "text-xl" : "text-lg"
+        } ${theme === "dark" ? "text-white" : "text-gray-900"}`}
       >
         {project.title}
       </h3>
@@ -114,46 +113,73 @@ function ProjectCard({ project }: { project: Project }) {
   );
 }
 
-export default function ProjectsPage() {
+export function ProjectsSection() {
   const { theme } = useTheme();
 
   return (
-    <main
-      className={`min-h-screen ${
-        theme === "dark" ? "bg-neutral-950 text-white" : "bg-white text-gray-900"
+    <section
+      id="projects"
+      className={`py-20 px-4 ${
+        theme === "dark" ? "bg-neutral-900/50" : "bg-neutral-50"
       }`}
     >
-      <Header />
-
-      <div className="pt-24 pb-16 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-12">
-            <h1 className="text-3xl font-bold mb-2">
-              All <span className="text-emerald-500">Projects</span>
-            </h1>
-            <p className="text-muted-foreground">
-              Open-source tools and infrastructure projects I&apos;ve built
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <h2
+              className={`text-3xl font-bold mb-2 ${
+                theme === "dark" ? "text-white" : "text-neutral-900"
+              }`}
+            >
+              Featured <span className="text-emerald-500">Projects</span>
+            </h2>
+            <p
+              className={
+                theme === "dark" ? "text-neutral-400" : "text-neutral-600"
+              }
+            >
+              Open-source tools and infrastructure projects
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
-            ))}
-          </div>
-
-          <p
-            className={`text-center mt-12 text-sm ${
-              theme === "dark" ? "text-neutral-500" : "text-gray-500"
+          <Link
+            href="/projects"
+            className={`hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              theme === "dark"
+                ? "text-emerald-400 hover:bg-emerald-500/10"
+                : "text-emerald-600 hover:bg-emerald-50"
             }`}
           >
-            Want to add a project? Edit{" "}
-            <code className="text-emerald-500">lib/data/projects.ts</code>
-          </p>
+            View all
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projects.slice(0, 5).map((project, index) => (
+            <div
+              key={project.slug}
+              className={index === 0 ? "md:col-span-2 lg:col-span-2" : ""}
+            >
+              <ProjectCard project={project} featured={index === 0} />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center sm:hidden">
+          <Link
+            href="/projects"
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              theme === "dark"
+                ? "text-emerald-400 hover:bg-emerald-500/10"
+                : "text-emerald-600 hover:bg-emerald-50"
+            }`}
+          >
+            View all projects
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
-
-      <Footer />
-    </main>
+    </section>
   );
 }

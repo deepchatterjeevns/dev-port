@@ -8,9 +8,7 @@ interface Project {
   description: string;
   tags: string[];
   github?: string;
-  repoUrl?: string;
   link?: string;
-  liveUrl?: string;
 }
 
 interface ProjectCardProps {
@@ -39,9 +37,9 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
             {project.title}
           </h3>
           <div className="flex items-center gap-2">
-            {(project.github || project.repoUrl) && (project.github !== "#" || project.repoUrl !== "#") && (
+            {project.github && (
               <a
-                href={project.repoUrl || project.github}
+                href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`p-1.5 rounded-md transition-colors ${
@@ -53,9 +51,9 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
                 <Github size={16} />
               </a>
             )}
-            {(project.link || project.liveUrl) && (project.link !== "#" || project.liveUrl !== "#") && (
+            {project.link && project.link !== "#" && (
               <a
-                href={project.liveUrl || project.link}
+                href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`p-1.5 rounded-md transition-colors ${
